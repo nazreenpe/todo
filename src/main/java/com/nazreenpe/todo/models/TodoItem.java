@@ -11,6 +11,9 @@ public class TodoItem {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public TodoItem() {
+    }
+
     public TodoItem(String title) {
         this.id = UUID.randomUUID().toString();
         this.title = title;

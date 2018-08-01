@@ -13,6 +13,7 @@ public class AppConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return objectMapper;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -36,13 +37,7 @@ public class TodoResource {
     @RequestMapping(path = "/{id}", method = GET, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TodoItem> get(@PathVariable("id") String id) {
-       TodoItem found = null;
-        for (TodoItem item : items) {
-            if (item.getId().equals(id)) {
-                found = item;
-                break;
-            }
-        }
+        TodoItem found = findItemById(id);
 
         if (found == null) {
             return ResponseEntity.notFound().build();
@@ -50,5 +45,29 @@ public class TodoResource {
             return ResponseEntity.ok(found);
         }
     }
+
+    @RequestMapping(path = "/{id}", method = DELETE, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TodoItem> delete(@PathVariable("id") String id) {
+        TodoItem item = findItemById(id);
+        if (item == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            items.remove(item);
+            return ResponseEntity.ok().build();
+        }
+    }
+
+    private TodoItem findItemById(String id) {
+        TodoItem found = null;
+        for (TodoItem item : items) {
+            if (item.getId().equals(id)) {
+                found = item;
+                break;
+            }
+        }
+        return found;
+    }
+
 
 }

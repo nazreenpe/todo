@@ -4,10 +4,8 @@ import com.nazreenpe.todo.models.TodoItem;
 import com.nazreenpe.todo.payloads.TodoItemCreate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +31,24 @@ public class TodoResource {
         TodoItem todoItem = new TodoItem(payload.getTitle());
         items.add(todoItem);
         return todoItem;
+    }
+
+    @RequestMapping(path = "/{id}", method = GET, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TodoItem> get(@PathVariable("id") String id) {
+       TodoItem found = null;
+        for (TodoItem item : items) {
+            if (item.getId().equals(id)) {
+                found = item;
+                break;
+            }
+        }
+
+        if (found == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(found);
+        }
     }
 
 }

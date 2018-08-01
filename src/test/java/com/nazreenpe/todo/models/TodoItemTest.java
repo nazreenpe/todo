@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.nazreenpe.todo.configuration.AppConfiguration;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -40,19 +41,17 @@ public class TodoItemTest {
     @Test
     public void containsIdWhenSerialized() throws JsonProcessingException {
         TodoItem todoItem = new TodoItem("Buy milk");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        ObjectMapper objectMapper = new AppConfiguration().objectMapper();
+
         String serialized = objectMapper.writeValueAsString(todoItem);
         System.out.println(serialized);
+        assertTrue(serialized.contains(todoItem.getId()));
     }
 
     @Test
     public void canSerializeAndDeserialize() throws IOException {
         TodoItem todoItem = new TodoItem("Buy hiking pole");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        ObjectMapper objectMapper = new AppConfiguration().objectMapper();
 
         String serialized = objectMapper.writeValueAsString(todoItem);
         TodoItem deserialized = objectMapper.readValue(serialized, TodoItem.class);

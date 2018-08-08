@@ -3,6 +3,7 @@ package com.nazreenpe.todo.resource;
 import com.nazreenpe.todo.models.TodoItem;
 import com.nazreenpe.todo.payloads.TodoItemCreate;
 import com.nazreenpe.todo.payloads.TodoItemUpdate;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +73,20 @@ public class TodoResource {
                 item.setTitle(payload.getTitle());
             }
             return ResponseEntity.ok(item);
+        }
+    }
+
+    @RequestMapping(path = "/{id}", method = PUT, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TodoItem> put(@PathVariable("id") String id,
+                                        @RequestBody TodoItemUpdate payload) {
+        TodoItem found = findItemById(id);
+        if (found == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            found.setTitle(payload.getTitle());
+            found.setCompleted(payload.getCompleted());
+            return ResponseEntity.ok(found);
         }
     }
 

@@ -2,6 +2,7 @@ package com.nazreenpe.todo.resource;
 
 import com.nazreenpe.todo.models.TodoItem;
 import com.nazreenpe.todo.payloads.TodoItemCreate;
+import com.nazreenpe.todo.payloads.TodoItemUpdate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/todo")
@@ -55,6 +54,24 @@ public class TodoResource {
         } else {
             items.remove(item);
             return ResponseEntity.ok().build();
+        }
+    }
+
+    @RequestMapping(path = "/{id}", method = PATCH, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TodoItem> patch(@PathVariable("id") String id,
+                                          @RequestBody TodoItemUpdate payload) {
+        TodoItem item = findItemById(id);
+        if (item == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            if (payload.getCompleted() != null) {
+                item.setCompleted(payload.getCompleted());
+            }
+            if (payload.getTitle() != null) {
+                item.setTitle(payload.getTitle());
+            }
+            return ResponseEntity.ok(item);
         }
     }
 

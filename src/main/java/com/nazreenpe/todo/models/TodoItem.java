@@ -64,4 +64,13 @@ public class TodoItem {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+        setUpdatedAt();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        setUpdatedAt();
+    }
 }

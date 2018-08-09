@@ -28,10 +28,15 @@ public class TodoResource {
     @RequestMapping(path = "", method = POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public TodoItem create(@RequestBody TodoItemCreate payload) {
-        TodoItem todoItem = new TodoItem(payload.getTitle());
-        items.add(todoItem);
-        return todoItem;
+    public ResponseEntity<TodoItem> create(@RequestBody TodoItemCreate payload) {
+        if (payload.getTitle() == null) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            TodoItem todoItem = new TodoItem(payload.getTitle());
+            items.add(todoItem);
+            return ResponseEntity.ok(todoItem);
+        }
+
     }
 
     @RequestMapping(path = "/{id}", method = GET, consumes = MediaType.APPLICATION_JSON_VALUE,
